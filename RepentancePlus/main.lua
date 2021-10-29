@@ -743,7 +743,16 @@ function rplus:OnNewRoom()
 				end
 			end	
 		end
-		
+		if player:HasTrinket(Trinkets.ADAMSRIB) and math.random(100)<25 and Isaac.CountEnemies() > 1 then
+				player:UseCard(95,385)
+				local eve=game:GetPlayer(game:GetNumPlayers()-1)
+				eve:ChangePlayerType(5)
+				eve:AddBoneHearts(-3)
+				eve:AddMaxHearts(4)
+				eve:AddHearts(4)
+				eve:AddCollectible(122, 0, false, 0, 0)
+				eve:AddCollectible(117, 0, false, 0, 0)
+		end
 		if player:HasCollectible(Collectibles.BLACKDOLL) and room:IsFirstVisit() and Isaac.CountEnemies() > 1 then
 			ABSepNumber = math.floor(Isaac.CountEnemies() / 2)
 			EntitiesGroupA = {}
@@ -1052,21 +1061,6 @@ function rplus:OnFrame()
 				end
 			end
 		end
-		
-		if player:HasTrinket(Trinkets.ADAMSRIB) then
-			if sprite:IsPlaying("Death") and sprite:GetFrame() > 50 then
-				player:TryRemoveTrinket(Trinkets.ADAMSRIB)
-				for i = 0, game:GetNumPlayers() - 1 do
-					Isaac.GetPlayer(i):Revive()
-					GiveRevivalIVFrames(Isaac.GetPlayer(i))
-				end
-				player:ChangePlayerType(PlayerType.PLAYER_EVE)
-				if not player:HasCollectible(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON) then player:AddCollectible(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON) end
-				player:AddMaxHearts(-24, false)
-				player:AddSoulHearts(6)
-			end
-		end
-		
 		if player:HasCollectible(Collectibles.TWOPLUSONE) then
 			for _, entity in pairs(Isaac.GetRoomEntities()) do
 				if entity.Type == 5 then

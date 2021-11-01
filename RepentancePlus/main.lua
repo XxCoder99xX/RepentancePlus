@@ -124,7 +124,10 @@ PocketItems = {
 	BUSINESSCARD = Isaac.GetCardIdByName("Business Card"),
 	SACBLOOD = Isaac.GetCardIdByName("Sacrificial Blood"),			-- MINOR COMPATIBILITY ISSUES
 	FLYPAPER = Isaac.GetCardIdByName("Flypaper"),
-	LIBRARYCARD = Isaac.GetCardIdByName("Library Card")
+	LIBRARYCARD = Isaac.GetCardIdByName("Library Card"),
+	ANTIMATERIALCARD = Isaac.GetCardIdByName("Antimaterial Card"),
+	FUNERALSERVICES = Isaac.GetCardIdByName("Funeral Services"),
+	MOMSID = Isaac.GetCardIdByName("Mom's ID")
 }
 
 PickUps = {
@@ -1574,6 +1577,20 @@ function rplus:CardUsed(Card, Player, _)
 	
 	if Card == PocketItems.LIBRARYCARD then
 		Player:UseActiveItem(game:GetItemPool():GetCollectible(ItemPoolType.POOL_LIBRARY, false, Random(), 0), true, false, true, true, -1)
+	end
+	if Card == PocketItems.ANTIMATERIALCARD then -- throw eraser 
+		local vector = Vector.FromAngle(DIRECTION_VECTOR[player:GetMovementDirection()]:GetAngleDegrees()):Resized(10) 
+		local Eraser = Isaac.Spawn(2, 45, 0, player.Position, vector, nil):GetSprite()		
+		Eraser.Scale = Vector(0.75, 0.75)
+	end
+	if Card == PocketItems.FUNERALSERVICES then --spawn old chest
+		Isaac.Spawn(5, 55, 0, Isaac.GetFreeNearPosition(player.Position, 40), Vector.Zero, nil)
+	end	
+	if Card == PocketItems.MOMSID then -- give random passive mom's item
+		repeat
+		momitem = game:GetItemPool():GetCollectible(ItemPoolType.POOL_MOMS_CHEST, true, Random(), 0)
+		until Isaac.GetItemConfig():GetCollectible(momitem).Type == ItemType.ITEM_PASSIVE 
+		player:AddCollectible(momitem)
 	end
 end
 rplus:AddCallback(ModCallbacks.MC_USE_CARD, rplus.CardUsed)
